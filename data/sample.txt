@@ -1,0 +1,10 @@
+// Variable declarations
+let flag: boolean = false;
+
+flag = true;
+
+if true {
+    let variable: number = 12;
+}
+
+variable = 10;
