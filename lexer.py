@@ -17,7 +17,7 @@ reserved = {
 
 # List of token names
 tokens = [
-    'NUMBER', 'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE',
+    'NUMBER', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
     'IDENTIFIER', 'EQUALS', 'ASSIGN', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQUAL', 'LESS_EQUAL',
     'AND', 'OR', 'NOT',
     'STRING', 'BOOLEAN', 'SEMICOLON', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
@@ -27,7 +27,7 @@ tokens = [
 # -------------- Regular Expressions Rules -------------- #
 t_PLUS = r'\+'
 t_MINUS = r'-'
-t_MULTIPLY = r'\*'
+t_TIMES = r'\*'
 t_DIVIDE = r'/'
 t_EQUALS = r'=='
 t_ASSIGN = r'='

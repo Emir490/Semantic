@@ -4,6 +4,16 @@ import lexer
 tokens = lexer.tokens
 symbol_table = {}
 
+precedence = (
+    ('left', 'OR'),
+    ('left', 'AND'),
+    ('left', 'EQUALS', 'NOT_EQUAL'),
+    ('left', 'LESS', 'LESS_EQUAL', 'GREATER', 'GREATER_EQUAL'),
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'TIMES', 'DIVIDE'),
+    ('right', 'NOT')
+)
+
 def p_program(p):
     '''program : statements'''
     p[0] = p[1]

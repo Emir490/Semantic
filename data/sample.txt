@@ -1,7 +1,7 @@
 // Declaración de variable
 let flag: boolean = false;
 let num: number = 12;
-let name:  string = "Nombre";
+let name: string = "Nombre";
 
 flag = "Hola";
 num = 10;
