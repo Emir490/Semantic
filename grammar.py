@@ -9,19 +9,17 @@ def p_program(p):
     p[0] = p[1]
 
 def p_statements(p):
-    '''statements : statement
-                  | statement statements
-                  | empty'''
-    if len(p) == 2:
-        p[0] = [p[1]]
-    else:
+    '''statements : statement statements_tail'''
+    p[0] = [p[1]] + p[2]
+
+def p_statements_tail(p):
+    '''statements_tail : statement statements_tail
+                       | '''
+    if len(p) == 3:
         p[0] = [p[1]] + p[2]
-    
-    # Print symbol table
-    print(f"Current Symbol Table: {symbol_table}")
+    else:
+        p[0] = []
 
-
-# Combined declarations with and without type
 def p_declaration_statement(p):
     '''declaration_statement : LET IDENTIFIER COLON type ASSIGN expression SEMICOLON
                              | CONST IDENTIFIER COLON type ASSIGN expression SEMICOLON
@@ -55,7 +53,6 @@ def p_assignment_statement(p):
         print(f"Semantic Error: Cannot assign to constant {identifier}")
         return
 
-    # Assuming p[3] contains type information ('expression', value, type)
     exp_type = p[3][2]
     if exp_type != symbol_table[identifier]['type']:
         print(f"Type Error: Incompatible types for {identifier}")
@@ -100,7 +97,7 @@ def p_expression(p):
 
 def p_block(p):
     '''block : LBRACE statements RBRACE'''
-    p[0] = p[2]  # Store the actual statements, you probably want this rather than p[1] which is just '{'
+    p[0] = p[2]
 
 def p_error(p):
     print(f"Syntax error at '{p.value}'")

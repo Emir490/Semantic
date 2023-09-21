@@ -3,6 +3,7 @@ from ply import lex
 # -------------- Tokens Setup -------------- #
 # Reserved words
 reserved = {
+    'var': 'VAR',
     'let': 'LET',
     'const': 'CONST',
     'if': 'IF',
