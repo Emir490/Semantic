@@ -10,7 +10,7 @@ precedence = (
     ('left', 'EQUALS', 'NOT_EQUAL'),
     ('left', 'LESS', 'LESS_EQUAL', 'GREATER', 'GREATER_EQUAL'),
     ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE'),
+    ('left', 'TIMES', 'DIVIDE', 'MODULO'),
     ('right', 'NOT')
 )
 
@@ -104,7 +104,37 @@ def p_expression(p):
         p[0] = ('expression', p[1], 'string')
     elif isinstance(p[1], int):
         p[0] = ('expression', p[1], 'number')
+        
+def p_expression_arithmetic(p):
+    '''expression : expression PLUS expression
+                  | expression MINUS expression
+                  | expression TIMES expression
+                  | expression DIVIDE expression
+                  | expression MODULO expression'''
+    p[0] = ('arithmetic_expression', p[1], p[2], p[3])
+    
+def p_expression_relational(p):
+    '''expression : expression LESS expression
+                  | expression LESS_EQUAL expression
+                  | expression GREATER expression
+                  | expression GREATER_EQUAL expression
+                  | expression EQUALS expression
+                  | expression NOT_EQUAL expression'''
+    p[0] = ('relational_expression', p[1], p[2], p[3])
 
+def p_expression_logical(p):
+    '''expression : expression AND expression
+                  | expression OR expression'''
+    p[0] = ('logical_expression', p[1], p[2], p[3])
+    
+def p_expression_not(p):
+    '''expression : NOT_EQUAL expression'''
+    p[0] = ('logical_expression', 'NOT', p[2])
+    
+def p_expression_group(p):
+    '''expression : LPAREN expression RPAREN'''
+    p[0] = ('group_expression', p[2])
+    
 def p_block(p):
     '''block : LBRACE statements RBRACE'''
     p[0] = p[2]

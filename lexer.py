@@ -17,7 +17,7 @@ reserved = {
 
 # List of token names
 tokens = [
-    'NUMBER', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
+    'NUMBER', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MODULO',
     'IDENTIFIER', 'EQUALS', 'ASSIGN', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQUAL', 'LESS_EQUAL',
     'AND', 'OR', 'NOT',
     'STRING', 'BOOLEAN', 'SEMICOLON', 'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
@@ -29,6 +29,7 @@ t_PLUS = r'\+'
 t_MINUS = r'-'
 t_TIMES = r'\*'
 t_DIVIDE = r'/'
+t_MODULO = r'%'
 t_EQUALS = r'=='
 t_ASSIGN = r'='
 t_NOT_EQUAL = r'!='

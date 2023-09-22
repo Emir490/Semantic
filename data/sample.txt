@@ -1,6 +1,6 @@
 // Declaración de variable
-let flag: boolean = false;
-let num: number = 12;
+let flag: boolean =  5 > 2 || 3 <= 12;
+let num: number = 2+5*2 / (2*4-6) * (2 + 3 / 9);
 let name: string = "Nombre";
 
 flag = "Hola";
