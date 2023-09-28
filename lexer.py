@@ -1,7 +1,7 @@
 from ply import lex
 
-# -------------- Tokens Setup -------------- #
-# Reserved words
+# -------------- Configuración de Tokens -------------- #
+# Palabras reservadas
 reserved = {
     'var': 'VAR',
     'let': 'LET',
@@ -15,7 +15,7 @@ reserved = {
     'return': 'RETURN'
 }
 
-# List of token names
+# Lista de nombres de tokens
 tokens = [
     'NUMBER', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MODULO',
     'IDENTIFIER', 'EQUALS', 'ASSIGN', 'NOT_EQUAL', 'GREATER', 'LESS', 'GREATER_EQUAL', 'LESS_EQUAL',
@@ -24,7 +24,8 @@ tokens = [
     'COLON', 'DOT', 'COMMA'
 ] + list(reserved.values())
 
-# -------------- Regular Expressions Rules -------------- #
+# -------------- Reglas de Expresiones Regulares -------------- #
+# Aquí definimos qué caracteres corresponden a cada token
 t_PLUS = r'\+'
 t_MINUS = r'-'
 t_TIMES = r'\*'
@@ -49,10 +50,12 @@ t_RPAREN = r'\)'
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
 
-# Ignore whitespace and newline
+# Ignorar espacios en blanco y saltos de línea
 t_ignore = ' \t\n'
 
-# -------------- Token Functions -------------- #
+# -------------- Funciones de Tokens -------------- #
+# Funciones para tokens que necesitan lógica adicional
+
 def t_BOOLEAN(t):
     r'true|false'
     t.type = reserved.get(t.value, 'BOOLEAN')
@@ -61,29 +64,33 @@ def t_BOOLEAN(t):
 
 def t_STRING(t):
     r'\".*?\"'
-    t.value = t.value[1:-1]  # Remove the surrounding quotes
+    t.value = t.value[1:-1]  # Elimina las comillas que rodean la cadena
     return t
 
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value, 'IDENTIFIER')
+    t.type = reserved.get(t.value, 'IDENTIFIER')  # Verifica si el identificador es una palabra reservada
     return t
 
 def t_NUMBER(t):
     r'\d+'
-    t.value = int(t.value)
+    t.value = int(t.value)  # Convierte el valor a entero
     return t
 
+# Ignorar comentarios de una línea
 def t_COMMENT(t):
     r'//.*'
-    pass  # No return value. Token discarded
+    pass  # Sin valor de retorno. Token descartado
 
+# Ignorar comentarios de múltiples líneas
 def t_MULTILINE_COMMENT(t):
     r'/\*(.|\n)*?\*/'
-    pass  # No return value. Token discarded
+    pass  # Sin valor de retorno. Token descartado
 
+# Función para manejar caracteres ilegales
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print("Carácter ilegal '%s'" % t.value[0])
     t.lexer.skip(1)
-    
+
+# Crear el lexer
 lexer = lex.lex()
