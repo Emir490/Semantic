@@ -10,3 +10,9 @@ name = 120;
 x = 12;
 
 let num: number = 12;
+
+if (12 > 60) {
+    let fbar = 12;
+} else {
+    const constante = 12;
+}

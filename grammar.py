@@ -1,5 +1,6 @@
 from ply import yacc
 import lexer 
+from semantic import check_declaration
 
 tokens = lexer.tokens
 symbol_table = {}
@@ -39,8 +40,7 @@ def p_declaration_statement(p):
     
     identifier = p[2]
     
-    if identifier in symbol_table:
-        print(f"Semantic Error: Variable {identifier} is already declared")
+    if not check_declaration(identifier, p):
         return
     
     if p[2] == 'COLON':
@@ -76,7 +76,7 @@ def p_type(p):
 
 def p_if_statement(p):
     '''if_statement : IF expression block else_clause'''
-    p[0] = ('if_statement', p[2], p[3], p[4])  # Corrected index references
+    p[0] = ('if_statement', p[2], p[3], p[4])
 
 def p_else_clause(p):
     '''else_clause : ELSE block
