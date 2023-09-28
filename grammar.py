@@ -1,9 +1,8 @@
 from ply import yacc
 import lexer 
-from semantic import check_declaration
+from semantic import check_declaration, symbol_table, check_assignment
 
 tokens = lexer.tokens
-symbol_table = {}
 
 precedence = (
     ('left', 'OR'),
@@ -54,19 +53,10 @@ def p_declaration_statement(p):
         
 def p_assignment_statement(p):
     '''assignment_statement : IDENTIFIER ASSIGN expression SEMICOLON'''
+    
     identifier = p[1]
-    if identifier not in symbol_table:
-        print(f"Semantic Error: Variable {identifier} is not declared")
-        return
-
-    if symbol_table[identifier]['is_const']:
-        print(f"Semantic Error: Cannot assign to constant {identifier}")
-        return
-
     exp_type = p[3][2]
-    if exp_type != symbol_table[identifier]['type']:
-        print(f"Type Error: Incompatible types for {identifier}")
-        return
+    check_assignment(identifier, exp_type)
 
 def p_type(p):
     '''type : TYPE_NUMBER
