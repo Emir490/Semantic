@@ -151,6 +151,56 @@ def p_expression_not(p):
 def p_expression_group(p):
     '''expression : LPAREN expression RPAREN'''
     p[0] = ('group_expression', p[2])
+    
+# Rule for function declaration
+def p_function_declaration(p):
+    '''function_declaration : FUNCTION IDENTIFIER LPAREN param_list RPAREN block'''
+    p[0] = ('function_declaration', p[2], p[4], p[6])
+    intermediate_code.append(f"function {p[2]}({', '.join([f'{name}: {type_}' for name, type_ in p[4]])}) {p[6]}")
+
+# Rule for function call
+def p_function_call(p):
+    '''expression : IDENTIFIER LPAREN arg_list RPAREN'''
+    p[0] = ('function_call', p[1], p[3])
+    intermediate_code.append(f"{p[1]}({', '.join([str(arg) for arg in p[3]])})")
+
+# Rule for parameter list in function declaration
+def p_param_list(p):
+    '''param_list : param_list_tail
+                  | '''
+    p[0] = p[1] if len(p) > 1 else []
+
+# Rule for parameter list tail in function declaration
+def p_param_list_tail(p):
+    '''param_list_tail : IDENTIFIER COLON type COMMA param_list_tail
+                       | IDENTIFIER COLON type'''
+    if len(p) > 4:
+        p[0] = [(p[1], p[3])] + p[5]
+    else:
+        p[0] = [(p[1], p[3])]
+
+# Rule for argument list in function calls
+def p_arg_list(p):
+    '''arg_list : arg_list_tail
+                | '''
+    p[0] = p[1] if len(p) > 1 else []
+
+# Rule for argument list tail in function calls
+def p_arg_list_tail(p):
+    '''arg_list_tail : expression COMMA arg_list_tail
+                     | expression'''
+    if len(p) > 2:
+        p[0] = [p[1]] + p[3]
+    else:
+        p[0] = [p[1]]
+
+# Add 'function_declaration' to your 'statement' rule
+def p_statement(p):
+    '''statement : declaration_statement
+                 | if_statement
+                 | assignment_statement
+                 | function_declaration'''
+    p[0] = p[1]
 
 # Regla para bloques de código
 def p_block(p):

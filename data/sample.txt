@@ -16,3 +16,7 @@ if (12 > 60) {
 } else {
     const constante = 12;
 }
+
+function callName(num: number) {
+    const hi = 12;
+}
