@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import scrolledtext
 import lexer
-from grammar import parser
+from grammar import parser, intermediate_code
 from semantic import symbol_table, semantic_errors
 
 # Función para analizar el texto ingresado por el usuario
@@ -30,6 +30,9 @@ def on_run_button_click():
     errors_text.delete('1.0', tk.END)
     errors_text.insert(tk.END, "\n".join(errors))
     del errors[:]
+    print("\nGenerated Intermediate Code:")
+    for code in intermediate_code:
+        print(code)
 
 # Configurar la ventana principal
 root = tk.Tk()

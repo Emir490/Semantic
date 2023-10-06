@@ -17,6 +17,8 @@ if (12 > 60) {
     const constante = 12;
 }
 
-function callName(num: number) {
-    const hi = 12;
+function callNumber(num: number) {
+    return number;
 }
+
+let num: number = callNumber(12);
