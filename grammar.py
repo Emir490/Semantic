@@ -1,9 +1,9 @@
 from ply import yacc
 import lexer
 from semantic import check_declaration, symbol_table, check_assignment
+from intermediate import generate_assignment_code, generate_declaration_code
 
 tokens = lexer.tokens
-intermediate_code = []  # Código intermedio que se generará
 
 # Definir la precedencia de los operadores
 precedence = (
@@ -56,11 +56,12 @@ def p_declaration_statement(p):
         type_ = p[4]
         expression = p[6]
         p[0] = ('typed_declaration', p[1], identifier, type_, expression)
-        intermediate_code.append(f"{p[1]} {identifier}:{type_} = {expression};")
+        generate_declaration_code(p[1], identifier, type_, expression)
+        
     else:  # Declaración sin tipo
         expression = p[4]
         p[0] = ('untyped_declaration', p[1], identifier, expression)
-        intermediate_code.append(f"{p[1]} {identifier} = {expression};")
+        generate_declaration_code(p[1], p[2], type, expression=p[4])
 
     # Guardar el tipo en la tabla de símbolos si está presente
     if len(p) > 4 and p[3] == ':':
@@ -76,7 +77,8 @@ def p_assignment_statement(p):
     check_assignment(identifier, expression[2])
     
     p[0] = ('assignment', identifier, expression)
-    intermediate_code.append(f"{identifier} = {expression[1]};")
+    generate_assignment_code(identifier, expression)
+    
 
 # Regla para tipos de datos
 def p_type(p):
@@ -95,6 +97,14 @@ def p_else_clause(p):
     '''else_clause : ELSE block
                    | empty'''
     p[0] = p[1]
+    
+def p_return_statement(p):
+    '''return_statement : RETURN expression SEMICOLON
+                        | RETURN SEMICOLON'''
+    if len(p) == 4:
+        p[0] = ('return_statement', p[2])
+    else:
+        p[0] = ('return_statement', None)
 
 # Regla para elementos vacíos (por ejemplo, en cláusula else opcional)
 def p_empty(p):
@@ -105,7 +115,10 @@ def p_empty(p):
 def p_statement(p):
     '''statement : declaration_statement
                  | if_statement
-                 | assignment_statement'''
+                 | assignment_statement
+                 | function_declaration
+                 | return_statement
+                 | expression'''
     p[0] = p[1]
 
 # Regla para expresiones básicas (números, cadenas, booleanos)
@@ -160,14 +173,14 @@ def p_function_declaration(p):
     '''function_declaration : FUNCTION IDENTIFIER LPAREN param_list RPAREN block'''
     p[0] = ('function_declaration', p[2], p[4], p[6])
     param_str = ', '.join([f"{name}:{type_}" for name, type_ in p[4]])
-    intermediate_code.append(f"function {p[2]}({param_str}) {p[6]}")
+    # intermediate_code.append(f"function {p[2]}({param_str}) {p[6]}")
 
 # Regla para llamar a una función
 def p_function_call(p):
     '''expression : IDENTIFIER LPAREN arg_list RPAREN'''
     p[0] = ('function_call', p[1], p[3])
     arg_str = ', '.join([str(arg[1]) for arg in p[3]])
-    intermediate_code.append(f"{p[1]}({arg_str});") 
+    # intermediate_code.append(f"{p[1]}({arg_str});") 
 
 # Regla para la lista de parametros
 def p_param_list(p):
@@ -198,14 +211,6 @@ def p_arg_list_tail(p):
         p[0] = [p[1]] + p[3]
     else:
         p[0] = [p[1]]
-
-def p_statement(p):
-    '''statement : declaration_statement
-                 | if_statement
-                 | assignment_statement
-                 | function_declaration
-                 | expression'''
-    p[0] = p[1]
 
 # Regla para bloques de código
 def p_block(p):

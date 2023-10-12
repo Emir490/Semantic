@@ -18,7 +18,7 @@ if (12 > 60) {
 }
 
 function callNumber(num: number) {
-    return number;
+    return num;
 }
 
 let num: number = callNumber(12);

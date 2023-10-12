@@ -3,8 +3,9 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import scrolledtext
 import lexer
-from grammar import parser, intermediate_code
+from grammar import parser
 from semantic import symbol_table, semantic_errors
+from intermediate import intermediate_code
 
 # Función para analizar el texto ingresado por el usuario
 def parse_input(input_str):
@@ -30,9 +31,11 @@ def on_run_button_click():
     errors_text.delete('1.0', tk.END)
     errors_text.insert(tk.END, "\n".join(errors))
     del errors[:]
-    print("\nGenerated Intermediate Code:")
-    for code in intermediate_code:
-        print(code)
+    
+    # Display Intermediate Code
+    intermediate_text.delete('1.0', tk.END)
+    intermediate_text.insert(tk.END, "\n".join(intermediate_code))
+    intermediate_code.clear()
 
 # Configurar la ventana principal
 root = tk.Tk()
@@ -60,6 +63,10 @@ tree.grid(row=2, column=0, sticky=(tk.W, tk.E))
 # Área de texto para mostrar errores
 errors_text = scrolledtext.ScrolledText(frame, wrap=tk.WORD, width=40, height=5)
 errors_text.grid(row=3, column=0, sticky=(tk.W, tk.E))
+
+# Área de texto para mostrar código intermedio
+intermediate_text = scrolledtext.ScrolledText(frame, wrap=tk.WORD, width=40, height=10)
+intermediate_text.grid(row=4, column=0, sticky=(tk.W, tk.E))
 
 # Iniciar el bucle principal de Tkinter
 root.mainloop()
