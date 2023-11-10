@@ -142,6 +142,25 @@ def p_expression_arithmetic(p):
                   | expression DIVIDE expression
                   | expression MODULO expression'''
     p[0] = ('arithmetic_expression', p[1], p[2], p[3])
+    
+    num1 = p[1][1]
+    num2 = p[3][1]
+      
+    if isinstance(num1, (int, float)) and isinstance(num2, (int, float)):
+        if p[2] == '+':
+            p[0] = num1 + num2
+        elif p[2] == '-':
+            p[0] = num1 - num2
+        elif p[2] == '*':
+            p[0] = num1 * num2
+        elif p[2] == '/':
+            p[0] = num1 / num2
+        elif p[2] == '%':
+            p[0] = num1 % num2
+        print(f"Evaluated Expression: {num1} {p[2]} {num2} = {p[0]}")
+    else:
+        # Handle non-numeric operands as required
+        print('No expresiones numericas')
 
 # Reglas para expresiones relacionales
 def p_expression_relational(p):

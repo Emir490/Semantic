@@ -15,7 +15,7 @@ if (12 > 60) {
     let fbar = 12;
 } else {
     const constante = 12;
-}
+} 
 
 function callNumber(num: number) {
     return num;
